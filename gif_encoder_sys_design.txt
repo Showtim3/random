@@ -1,0 +1,59 @@
+Create a Video to Gif Encoder
+User should be able to upload video
+User should be able to download the converted GIF or get a shareable URL
+
+
+Is this a platform that retains stuff? NO. 
+
+
+100 users -> 
+10 < 1M -> 
+> 1M  
+
+
+UI -> API GATEWAY -> /upload -> Upload Service (Horizontally service) -> emit an event {video: url, type: ‘video_uploaded’ }, {“success: true”, video_id: string}
+
+/status -> StatusService -> grab the progress, 
+The frontend can poll.
+Pull based mechanism the frontend listents to api via sse. 
+
+			    -> Converter Service(Horizontally service) Takes the video and coverts to gif. Will save the gif, we get a url and populate the key value db.  {“type”: “” , payload: {video_id}}
+
+CLeanupSvc -> video_id, remove the video from the s3.
+
+
+/getsignedurl
+-> upload from the clipped frontend itself
+
+/render_gif: url: input
+ Lookup in the keyvalue db and return the gif.
+
+PUB/SUB, [{}, {}] -> workers w1, w2, w3. 
+Idemptocy if() { return; }
+
+UI 
+Upload video
+Fields, startTS, endTS.  We will only upload the relevant video.
+Convert, 
+Sse, websockets
+Can see past videos or past gifs (dont want to retain as of now)
+
+API Gateway
+/upload
+
+Aws s3, google storage(GCS)
+Store the raw video temp, and maybe remove them once the job is completed. Cleanup Job.
+
+GIF sharing Database – key: value store
+Sharing the urls. Key value
+Key: url, value: GIF (figure out if value is gif itself or a url to gif)
+Here the key is the publicly sharable url, Mongodb or dice db.
+
+DB
+Raw_video_url, timestamps…
+
+
+
+
+
+
